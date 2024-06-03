@@ -157,6 +157,12 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                             widget.job.role,
                             Icons
                                 .business_center), // Access job property from widget.job
+                        Divider(height: 24),
+                        _buildDetailsTile(
+                            'Education',
+                            widget.job.education.join(', '),
+                            Icons
+                                .school), // Access Education property from widget.job
                       ],
                     ),
                   ),

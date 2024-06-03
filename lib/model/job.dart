@@ -13,6 +13,7 @@ class Job {
   final String role;
   final String industryType;
   final List<dynamic> employmentType;
+  final List<dynamic> education;
   final String image;
   final String minSalary;
   final String maxSalary;
@@ -42,6 +43,7 @@ class Job {
     required this.role,
     required this.industryType,
     required this.employmentType,
+    required this.education,
     required this.image,
     required this.minSalary,
     required this.maxSalary,
@@ -75,6 +77,10 @@ class Job {
       employmentType: json['employment_type'] != null
           ? List<String>.from(
               json['employment_type'].map((item) => item.toString()))
+          : [],
+      education: json['education'] != null
+          ? List<String>.from(
+              json['education'].map((item) => item.toString()))
           : [],
       image: json['image'],
       minSalary: json['min_salary'],
