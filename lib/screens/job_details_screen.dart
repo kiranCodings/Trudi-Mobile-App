@@ -59,10 +59,25 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: Image.network(
-                      widget.job.image, // Access job property from widget.job
+                      widget.job.image,
                       width: double.infinity,
                       height: 200,
                       fit: BoxFit.cover,
+                      errorBuilder: (BuildContext context, Object exception,
+                          StackTrace? stackTrace) {
+                        return Container(
+                          width: double.infinity,
+                          height: 200,
+                          color: Colors.grey[300],
+                          child: Center(
+                            child: Icon(
+                              Icons.image,
+                              size: 50,
+                              color: Colors.white,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                   SizedBox(height: 24),
@@ -111,7 +126,7 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                         Divider(height: 24),
                         _buildDetailsTile(
                             'Skills',
-                            widget.job.skills,
+                            widget.job.skills.join(','),
                             Icons
                                 .code_outlined), // Access job property from widget.job
                         Divider(height: 24),
@@ -127,8 +142,8 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                         Divider(height: 24),
                         _buildDetailsTile(
                             'Employment Type',
-                            widget.job
-                                .employmentType, // Access job property from widget.job
+                            widget.job.employmentType.join(
+                                ', '), // Access job property from widget.job
                             Icons.work_outline),
                         Divider(height: 24),
                         _buildDetailsTile(

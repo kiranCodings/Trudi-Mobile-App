@@ -54,15 +54,22 @@ class JobListItem extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                job.image,
-                width: 60,
-                height: 60,
-                fit: BoxFit.cover,
-              ),
-            ),
+              ClipRRect(
+    borderRadius: BorderRadius.circular(8),
+    child: Image.network(
+      job.image,
+      width: 60,
+      height: 60,
+      fit: BoxFit.cover,
+      errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+        return Container(
+          width: 60,
+          height: 60,
+          color: Colors.grey[300],
+        );
+      },
+    ),
+  ),
             SizedBox(width: 16),
             Expanded(
               child: Column(
@@ -100,8 +107,7 @@ class JobListItem extends StatelessWidget {
                       Icon(Icons.location_on, size: 14, color: Colors.green),
                       SizedBox(width: 3),
                       Text(
-                        job.location,
-                        style: TextStyle(
+  job.location.length > 10 ? '${job.location.substring(0, 10)}...' : job.location,                        style: TextStyle(
                           color: Colors.green,
                           fontWeight: FontWeight.bold,
                         ),
