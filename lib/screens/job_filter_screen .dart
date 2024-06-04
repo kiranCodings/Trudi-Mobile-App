@@ -10,7 +10,7 @@ class JobFilterScreen extends StatefulWidget {
 }
 
 class _FilterScreenState extends State<JobFilterScreen> {
-  Map<String, dynamic> selectedFilters = {
+  Map<String, List<dynamic>> selectedFilters = {
     'locations': [],
     'skills': [],
     'roles': [],
@@ -20,10 +20,10 @@ class _FilterScreenState extends State<JobFilterScreen> {
 
   void toggleSelection(String category, dynamic value) {
     setState(() {
-      if (selectedFilters[category]!.contains(value)) {
-        selectedFilters[category]!.remove(value);
+      if (selectedFilters[category]!.contains(_getItemId(value))) {
+        selectedFilters[category]!.remove(_getItemId(value));
       } else {
-        selectedFilters[category]!.add(value);
+        selectedFilters[category]!.add(_getItemId(value));
       }
     });
   }
@@ -40,9 +40,9 @@ class _FilterScreenState extends State<JobFilterScreen> {
               Provider.of<JobProvider>(context, listen: false).fetchJobsWithFilters(
                 locations: selectedFilters['locations'],
                 skills: selectedFilters['skills'],
-                roles: selectedFilters['roles'].map((role) => _getItemId(role)).toList(),
-                industries: selectedFilters['industries'].map((industry) => _getItemId(industry)).toList(),
-                educations: selectedFilters['educations'].map((education) => _getItemId(education)).toList(),
+                roles: selectedFilters['roles'],
+                industries: selectedFilters['industries'],
+                educations: selectedFilters['educations'],
               );
               Navigator.of(context).pop();
             },
