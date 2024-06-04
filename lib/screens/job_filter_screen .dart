@@ -40,9 +40,9 @@ class _FilterScreenState extends State<JobFilterScreen> {
               Provider.of<JobProvider>(context, listen: false).fetchJobsWithFilters(
                 locations: selectedFilters['locations'],
                 skills: selectedFilters['skills'],
-                roles: selectedFilters['roles'].map((role) => role.id).toList(),
-                industries: selectedFilters['industries'].map((industry) => industry.id).toList(),
-                educations: selectedFilters['educations'].map((education) => education.id).toList(),
+                roles: selectedFilters['roles'].map((role) => _getItemId(role)).toList(),
+                industries: selectedFilters['industries'].map((industry) => _getItemId(industry)).toList(),
+                educations: selectedFilters['educations'].map((education) => _getItemId(education)).toList(),
               );
               Navigator.of(context).pop();
             },
@@ -104,6 +104,14 @@ class _FilterScreenState extends State<JobFilterScreen> {
       ),
     );
   }
+
+  dynamic _getItemId(dynamic item) {
+    if (item is String || item is int) {
+      return item;
+    } else {
+      return item.id;
+    }
+  }
 }
 
 class FilterSection extends StatelessWidget {
@@ -144,19 +152,15 @@ class FilterSection extends StatelessWidget {
     );
   }
 
-  dynamic _getItemId(item) {
-    if (isRole) {
-      return item.id;
-    } else if (isIndustry) {
-      return item.id;
-    } else if (isEducation) {
-      return item.id;
-    } else {
+  dynamic _getItemId(dynamic item) {
+    if (item is String || item is int) {
       return item;
+    } else {
+      return item.id;
     }
   }
 
-  String _getItemName(item) {
+  String _getItemName(dynamic item) {
     if (isRole) {
       return item.roleName;
     } else if (isIndustry) {
