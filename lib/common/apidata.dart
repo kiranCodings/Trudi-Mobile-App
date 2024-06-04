@@ -121,6 +121,8 @@ class APIData {
   static const String instituteDetailsPostfix = '?secret=' + secretKey;
   static const String upiDetails = domainApiLink + 'upi-details';
   static const String jobListing = domainApiLink + 'job/find?secret=';
+  static const String jobFilter = domainApiLink + 'locationfilter?secret=';
+  static const String getFilter = domainApiLink + 'getfilters?secret=';
   static const String applyJob = domainApiLink + "view/applyjob/";
   static const String appliedJoblist = domainApiLink + "view/applyjoblist?secret=";
   static const String createResume = domainApiLink + "create/resumes";

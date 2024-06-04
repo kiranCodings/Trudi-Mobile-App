@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:eclass/provider/job_provider.dart';
-import 'package:eclass/widgets/job_list_item.dart'; // Import the JobListItem widget
-
+import 'package:eclass/widgets/job_list_item.dart'; 
 class JobSearchScreen extends StatefulWidget {
   @override
   _JobSearchScreenState createState() => _JobSearchScreenState();
 }
+
 class _JobSearchScreenState extends State<JobSearchScreen> {
   TextEditingController _searchController = TextEditingController();
 
@@ -31,7 +31,9 @@ class _JobSearchScreenState extends State<JobSearchScreen> {
           IconButton(
             icon: Icon(Icons.filter_list),
             onPressed: () {
-              // Implement filter functionality
+              Navigator.of(context).pushNamed("/jobfilter").then((value) {
+                setState(() {});
+              });
             },
           ),
         ],
@@ -48,7 +50,8 @@ class _JobSearchScreenState extends State<JobSearchScreen> {
               ),
               child: TextField(
                 controller: _searchController,
-                onSubmitted: _performSearch, // Call _performSearch when submitted
+                onSubmitted:
+                    _performSearch, // Call _performSearch when submitted
                 decoration: InputDecoration(
                   hintText: 'Search jobs',
                   border: InputBorder.none,

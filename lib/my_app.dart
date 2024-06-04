@@ -8,6 +8,7 @@ import 'package:eclass/localization/language_provider.dart';
 import 'package:eclass/provider/InstituteProvider.dart';
 import 'package:eclass/provider/compareCourseProvider.dart';
 import 'package:eclass/provider/currenciesProvider.dart';
+import 'package:eclass/provider/filter_provider.dart';
 import 'package:eclass/provider/manual_payment_provider.dart';
 import 'package:eclass/provider/resume_provider.dart';
 import 'package:eclass/provider/terms_policy_provider.dart';
@@ -52,6 +53,7 @@ import 'Screens/notifications_screen.dart';
 import 'Screens/purchase_history_screen.dart';
 import 'Screens/sign_up_screen.dart';
 import 'Screens/sub_category_screen.dart';
+import 'Screens/job_filter_screen .dart';
 import 'provider/bundle_course.dart';
 import 'provider/cart_pro_api.dart';
 import 'provider/filter_pro.dart';
@@ -113,6 +115,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => JobProvider()),
         ChangeNotifierProvider(create: (_) => AppliedJobProvider()),
         ChangeNotifierProvider(create: (_) => ResumeProvider()),
+        ChangeNotifierProvider(create: (_) => FilterProvider()),
       ],
       child: LocalizationProvider(
         state: LocalizationProvider.of(context).state,
@@ -163,6 +166,7 @@ class MyApp extends StatelessWidget {
             '/currency': (context) => CurrencyScreen(),
             '/compare': (context) => CompareCourseScreen(),
             '/wallet': (context) => WalletScreen(),
+            '/jobfilter': (context) => JobFilterScreen(),
           },
         ),
       ),
