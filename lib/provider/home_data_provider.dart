@@ -54,7 +54,8 @@ class HomeDataProvider with ChangeNotifier {
   Future<HomeModel?> getHomeDetails(context) async {
     String url = "${APIData.home}${APIData.secretKey}";
     print(url);
-      // await handleCloudFlareChallenge(url, context);
+
+     // await handleCloudFlareChallenge(url, context);
 
     http.Response res = await http.get(Uri.parse(url));
     log("Home API Status Code :-> ${res.statusCode}");

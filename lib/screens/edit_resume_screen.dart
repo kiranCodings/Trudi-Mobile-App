@@ -59,7 +59,8 @@ class _EditResumeScreenState extends State<EditResumeScreen> {
     _addressController = TextEditingController(text: resume.personal.address);
     _phoneController = TextEditingController(text: resume.personal.phone);
     _emailController = TextEditingController(text: resume.personal.email);
-    _skillController = TextEditingController(text: resume.personal.skill);
+    _skillController =
+        TextEditingController(text: resume.personal.skill.join(','));
     _strengthController = TextEditingController(text: resume.personal.strength);
     _interestController = TextEditingController(text: resume.personal.interest);
     _languageController = TextEditingController(text: resume.personal.language);
@@ -159,7 +160,7 @@ class _EditResumeScreenState extends State<EditResumeScreen> {
     final address = _addressController.text.trim();
     final phone = _phoneController.text.trim();
     final email = _emailController.text.trim();
-    final skill = _skillController.text.trim();
+    final skill = _skillController.text.trim().split(',');
     final strength = _strengthController.text.trim();
     final interest = _interestController.text.trim();
     final language = _languageController.text.trim();
@@ -355,7 +356,8 @@ class _EditResumeScreenState extends State<EditResumeScreen> {
             TextFormField(
               controller: _phoneController,
               decoration: InputDecoration(labelText: 'Phone'),
-                keyboardType: TextInputType.number, // Set the keyboardType to number
+              keyboardType:
+                  TextInputType.number, // Set the keyboardType to number
               onChanged: (value) {
                 setState(() => _phoneController.text = value);
               },
@@ -373,11 +375,45 @@ class _EditResumeScreenState extends State<EditResumeScreen> {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
+            Wrap(
+              spacing: 8.0,
+              runSpacing: 4.0,
+              children: _skillController.text.isNotEmpty
+                  ? _skillController.text.split(',').map((skill) {
+                      return Chip(
+                        label: Text(skill.trim()),
+                        onDeleted: () {
+                          setState(() {
+                            final updatedSkills = _skillController.text
+                                .split(',')
+                                .where((s) => s.trim() != skill)
+                                .join(',');
+                            _skillController.text = updatedSkills;
+                          });
+                        },
+                      );
+                    }).toList()
+                  : [],
+            ),
+            SizedBox(height: 10),
             TextFormField(
-              controller: _skillController,
-              decoration: InputDecoration(labelText: 'Skills'),
+              decoration: InputDecoration(labelText: 'Add Skill'),
               onChanged: (value) {
-                setState(() => _skillController.text = value);
+                // No action on onChanged
+              },
+              onFieldSubmitted: (value) {
+                // Trim leading and trailing spaces from the input value
+                final trimmedValue = value.trim();
+                // Remove any special characters or spaces from the trimmed input value
+                final validInput =
+                    trimmedValue.replaceAll(RegExp(r'[^a-zA-Z0-9,]'), '');
+                if (validInput.isNotEmpty) {
+                  setState(() {
+                    final updatedSkills =
+                        '${_skillController.text.isEmpty ? '' : '${_skillController.text},'}$validInput';
+                    _skillController.text = updatedSkills;
+                  });
+                }
               },
             ),
             SizedBox(height: 20),

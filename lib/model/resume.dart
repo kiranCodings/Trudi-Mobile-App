@@ -22,7 +22,7 @@ class Personal {
   final String address;
   final String phone;
   final String email;
-  final String skill;
+  final List<dynamic> skill;
   final String? skillLMS;
   final String strength;
   final String interest;
@@ -103,7 +103,12 @@ class Personal {
       address: json['address'] ?? '',
       phone: json['phone'] ?? '',
       email: json['email'] ?? '',
-      skill: json['skill'] ?? '',
+      skill: json['skill'] != null
+    ? (json['skill'] is List
+        ? List<String>.from(json['skill'])
+        : [json['skill'].toString()])
+    : [],
+
       skillLMS: json['skill_LMS'],
       strength: json['strength'] ?? '',
       interest: json['interest'] ?? '',

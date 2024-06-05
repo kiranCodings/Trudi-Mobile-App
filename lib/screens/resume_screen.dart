@@ -163,39 +163,45 @@ class ResumeScreen extends StatelessWidget {
       ),
     );
   }
-
-  Widget _buildInfoRow(IconData icon, String label, String value) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Icon(icon, color: Color(0xFF21b789)), // Brand color
-              SizedBox(width: 10),
-              Text(
-                label,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF21b789), // Brand color
-                ),
-              ),
-            ],
-          ),
-          Expanded(
-            child: Text(
-              value,
-              textAlign: TextAlign.right,
+Widget _buildInfoRow(IconData icon, String label, dynamic value) {
+  return Padding(
+    padding: EdgeInsets.symmetric(vertical: 4),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Icon(icon, color: Color(0xFF21b789)), // Brand color
+            SizedBox(width: 10),
+            Text(
+              label,
               style: TextStyle(
-                color: Colors.grey[800],
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF21b789), // Brand color
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+        Expanded(
+          child: value is List
+              ? Wrap(
+                  spacing: 4.0,
+                  children: (value as List<String>)
+                      .map((skill) => Chip(label: Text(skill)))
+                      .toList(),
+                )
+              : Text(
+                  value,
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                    color: Colors.grey[800],
+                  ),
+                ),
+        ),
+      ],
+    ),
+  );
+}
 
   Widget _buildEducationList(List<Education> educationList) {
     return Column(

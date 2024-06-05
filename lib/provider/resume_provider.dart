@@ -25,8 +25,7 @@ class ResumeProvider extends ChangeNotifier {
       );
 
       print(response.body);
-      print(response.statusCode);
-
+      print("kiran");
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
         final personalData = jsonResponse['Data'];
@@ -54,7 +53,7 @@ class ResumeProvider extends ChangeNotifier {
     required String address,
     required String phone,
     required String email,
-    required String skill,
+    required List<String> skill,
     required String strength,
     required String interest,
     required String language,
@@ -63,7 +62,9 @@ class ResumeProvider extends ChangeNotifier {
     required List<Map<String, String>> experienceList,
     required List<Map<String, String>> projectList,
     required File? image,
-  }) async {
+  })
+    
+   async {
     try {
       // Construct the form data
       final formData = {
@@ -76,7 +77,7 @@ class ResumeProvider extends ChangeNotifier {
         'address': address,
         'phone': phone,
         'email': email,
-        'skill': skill,
+        'skill': jsonEncode(skill),
         'strength': strength,
         'interest': interest,
         'language': language,
@@ -144,7 +145,7 @@ class ResumeProvider extends ChangeNotifier {
     required String address,
     required String phone,
     required String email,
-    required String skill,
+    required List<String> skill,
     required String strength,
     required String interest,
     required String language,
@@ -166,7 +167,7 @@ class ResumeProvider extends ChangeNotifier {
         'address': address,
         'phone': phone,
         'email': email,
-        'skill': skill,
+        'skill': jsonEncode(skill),
         'strength': strength,
         'interest': interest,
         'language': language,
@@ -185,6 +186,7 @@ class ResumeProvider extends ChangeNotifier {
       // Send the form data to the API
       final request = http.MultipartRequest('POST', Uri.parse(url));
       request.headers[HttpHeaders.authorizationHeader] = "Bearer $authToken";
+      
       request.fields.addAll(formData);
       multipartData.forEach((key, value) {
         if (value != null) {
@@ -211,8 +213,7 @@ class ResumeProvider extends ChangeNotifier {
         // Resume submitted successfully
         print('Resume submitted successfully');
         // Navigate to the view resume screen
-          await fetchResume(context);
-
+        await fetchResume(context);
       } else {
         throw Exception('Failed to submit resume');
       }
@@ -220,7 +221,6 @@ class ResumeProvider extends ChangeNotifier {
       throw Exception('Failed to submit resume: $e');
     }
   }
-
 
   void setResume(Resume resume) {
     _resume = resume;

@@ -29,7 +29,7 @@ class _CreateResumeScreenState extends State<CreateResumeScreen> {
   String address = '';
   String phone = '';
   String email = '';
-  String skill = '';
+  List<String> skillList = [];
   String strength = '';
   String interest = '';
   String language = '';
@@ -62,7 +62,6 @@ class _CreateResumeScreenState extends State<CreateResumeScreen> {
       setState(() {
         _isLoading = true;
       });
-
       resumeProvider
           .submitResume(
         context: context,
@@ -75,7 +74,7 @@ class _CreateResumeScreenState extends State<CreateResumeScreen> {
         address: address,
         phone: phone,
         email: email,
-        skill: skill,
+        skill: skillList,
         strength: strength,
         interest: interest,
         language: language,
@@ -257,7 +256,36 @@ class _CreateResumeScreenState extends State<CreateResumeScreen> {
                     _buildTextField('Email', (value) => email = value, true),
                     SizedBox(height: 20),
                     _buildSectionTitle('Skills'),
-                    _buildTextField('Skills', (value) => skill = value, true),
+                    Wrap(
+                      spacing: 8.0,
+                      runSpacing: 4.0,
+                      children: skillList.map((skill) {
+                        return Chip(
+                          label: Text(skill),
+                          onDeleted: () {
+                            setState(() {
+                              skillList.remove(skill);
+                            });
+                          },
+                        );
+                      }).toList(),
+                    ),
+                    SizedBox(height: 10),
+                    TextFormField(
+                      decoration: InputDecoration(labelText: 'Add Skill'),
+                      onFieldSubmitted: (value) {
+                        // Trim leading and trailing spaces from the input value
+                        final trimmedValue = value.trim();
+                        // Remove any special characters or spaces from the trimmed input value
+                        final validInput = trimmedValue.replaceAll(
+                            RegExp(r'[^a-zA-Z0-9]'), '');
+                        if (validInput.isNotEmpty) {
+                          setState(() {
+                            skillList.add(validInput);
+                          });
+                        }
+                      },
+                    ),
                     SizedBox(height: 20),
                     _buildSectionTitle('Objective'),
                     _buildTextField(
