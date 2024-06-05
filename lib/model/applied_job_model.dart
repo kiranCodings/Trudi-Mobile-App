@@ -12,12 +12,13 @@ class AppliedJob {
   final String requirement;
   final String role;
   final String industryType;
-  final String employmentType;
+  final List<dynamic> employmentType;
+  final List<dynamic> education;
   final String image;
   final String minSalary;
   final String maxSalary;
   final String salary;
-  final String skills;
+  final List<dynamic> skills;
   final String pdf;
   final String message;
   final String varified;
@@ -42,6 +43,7 @@ class AppliedJob {
     required this.role,
     required this.industryType,
     required this.employmentType,
+    required this.education,
     required this.image,
     required this.minSalary,
     required this.maxSalary,
@@ -72,12 +74,21 @@ class AppliedJob {
       requirement: json['requirement'],
       role: json['role'],
       industryType: json['industry_type'],
-      employmentType: json['employment_type'],
+      employmentType: json['employment_type'] != null
+          ? List<String>.from(
+              json['employment_type'].map((item) => item.toString()))
+          : [],
+      education: json['education'] != null
+          ? List<String>.from(json['education'].map((item) => item.toString()))
+          : [],
       image: json['image'],
       minSalary: json['min_salary'],
       maxSalary: json['max_salary'],
       salary: json['salary'],
-      skills: json['skills'],
+     skills: json['skills'] != null
+          ? List<String>.from(
+              json['skills'].map((item) => item.toString()))
+          : [],
       pdf: json['pdf'],
       message: json['message'],
       varified: json['varified'],

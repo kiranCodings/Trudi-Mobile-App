@@ -89,7 +89,7 @@ class _AppliedJobDetailsScreenState extends State<AppliedJobDetailsScreen> {
                   _buildDetailsTile(
                       'Industry', widget.appliedJob.industryType, Icons.domain),
                   _buildDetailsTile(
-                      'Skills', widget.appliedJob.skills, Icons.code_outlined),
+                      'Skills', widget.appliedJob.skills.join(","), Icons.code_outlined),
                   _buildDetailsTile(
                     'Experience',
                     '${widget.appliedJob.minExperience} - ${widget.appliedJob.maxExperience} ${widget.appliedJob.experience}',
@@ -101,13 +101,14 @@ class _AppliedJobDetailsScreenState extends State<AppliedJobDetailsScreen> {
                     Icons.attach_money_outlined,
                   ),
                   _buildDetailsTile('Employment Type',
-                      widget.appliedJob.employmentType, Icons.work_outline),
+                      widget.appliedJob.employmentType.join(","), Icons.work_outline),
                   _buildDetailsTile(
                       'Requirements',
                       widget.appliedJob.requirement,
                       Icons.check_circle_outline),
                   _buildDetailsTile('Job Role', widget.appliedJob.role,
                       Icons.business_center),
+                  _buildDetailsTile('Education', widget.appliedJob.education.join(","), Icons.school),
                 ],
               ),
             ),
