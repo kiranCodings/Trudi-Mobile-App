@@ -141,55 +141,105 @@ class _SignInScreenState extends State<SignInScreen>
     );
   }
 
-  Widget signInButton(width, scaffoldKey) {
-    var userDetails = Provider.of<UserDetailsProvider>(context, listen: false);
-    return Container(
-      width: width - 50,
-      child: ButtonTheme(
-        minWidth: width - 50,
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(3),
+  // Widget signInButton(width, scaffoldKey) {
+  //   var userDetails = Provider.of<UserDetailsProvider>(context, listen: false);
+  //   return Container(
+  //     width: width - 50,
+  //     child: ButtonTheme(
+  //       minWidth: width - 50,
+  //       child: ElevatedButton(
+  //         style: ElevatedButton.styleFrom(
+  //           shape: RoundedRectangleBorder(
+  //             borderRadius: BorderRadius.circular(3),
+  //           ),
+  //           padding: EdgeInsets.all(10.0),
+  //           backgroundColor: Colors.white,
+  //           disabledBackgroundColor: Colors.white.withOpacity(0.5),
+  //         ),
+  //         child: Text(
+  //           "Sign In",
+  //           style: TextStyle(
+  //               fontFamily: "Mada", fontSize: 22.0, color: Color(0xFF181632)),
+  //         ),
+  //         onPressed: userDetails.getSignInEmail
+  //             ? () async {
+  //                 FocusScope.of(context).requestFocus(FocusNode());
+  //                 showLoaderDialog(context);
+  //                 bool login = await httpService.login(
+  //                     userDetails.getEmail.value,
+  //                     userDetails.getPass.value,
+  //                     context,
+  //                     scaffoldKey);
+  //                 Navigator.pop(context);
+  //                 if (login) {
+  //                   userDetails.destroyLoginValues();
+  //                   Navigator.pushReplacement(
+  //                     context,
+  //                     MaterialPageRoute(
+  //                       builder: (context) => MyBottomNavigationBar(
+  //                         pageInd: 0,
+  //                       ),
+  //                     ),
+  //                   );
+  //                 } else {
+  //                   return;
+  //                 }
+  //               }
+  //             : null,
+  //       ),
+  //     ),
+  //   );
+  // }
+Widget signInButton(double width, GlobalKey<ScaffoldState> scaffoldKey) {
+  return Consumer<UserDetailsProvider>(
+    builder: (context, userDetails, child) {
+      return Container(
+        width: width - 50,
+        child: ButtonTheme(
+          minWidth: width - 50,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(3),
+              ),
+              padding: EdgeInsets.all(10.0),
+              backgroundColor: Colors.white,
+              disabledBackgroundColor: Colors.white.withOpacity(0.5),
             ),
-            padding: EdgeInsets.all(10.0),
-            backgroundColor: Colors.white,
-            disabledBackgroundColor: Colors.white.withOpacity(0.5),
-          ),
-          child: Text(
-            "Sign In",
-            style: TextStyle(
-                fontFamily: "Mada", fontSize: 22.0, color: Color(0xFF181632)),
-          ),
-          onPressed: userDetails.getSignInEmail
-              ? () async {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                  showLoaderDialog(context);
-                  bool login = await httpService.login(
+            child: Text(
+              "Sign In",
+              style: TextStyle(
+                fontFamily: "Mada", fontSize: 22.0, color: Color(0xFF181632),
+              ),
+            ),
+            onPressed: userDetails.getSignInEmail
+                ? () async {
+                    FocusScope.of(context).unfocus();
+                    showLoaderDialog(context);
+                    bool login = await httpService.login(
                       userDetails.getEmail.value,
                       userDetails.getPass.value,
                       context,
-                      scaffoldKey);
-                  Navigator.pop(context);
-                  if (login) {
-                    userDetails.destroyLoginValues();
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MyBottomNavigationBar(
-                          pageInd: 0,
-                        ),
-                      ),
+                      scaffoldKey,
                     );
-                  } else {
-                    return;
+                    Navigator.pop(context);
+                    if (login) {
+                      userDetails.destroyLoginValues();
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MyBottomNavigationBar(pageInd: 0),
+                        ),
+                      );
+                    }
                   }
-                }
-              : null,
+                : null,
+          ),
         ),
-      ),
-    );
-  }
+      );
+    },
+  );
+}
 
   void initiateFacebookLogin() async {
     final LoginResult result = await FacebookAuth.instance.login();

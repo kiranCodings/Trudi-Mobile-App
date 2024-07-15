@@ -10,23 +10,36 @@ class JobListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
-    final createdAt = job.createdAt;
-    final difference = now.difference(createdAt);
-    final differenceInDays = difference.inDays;
-    final differenceInMonths = (differenceInDays / 30).floor();
-    final differenceInYears = (differenceInDays / 365).floor();
+final createdAt = job.createdAt;
+final difference = now.difference(createdAt);
+final differenceInDays = difference.inDays;
+final differenceInMonths = (differenceInDays / 30).floor();
+final differenceInYears = (differenceInDays / 365).floor();
 
-    String timeSincePosted;
-    if (differenceInYears > 0) {
-      timeSincePosted =
-          '$differenceInYears year${differenceInYears > 1 ? 's' : ''} ago';
-    } else if (differenceInMonths > 0) {
-      timeSincePosted =
-          '$differenceInMonths month${differenceInMonths > 1 ? 's' : ''} ago';
-    } else {
-      timeSincePosted =
-          '$differenceInDays day${differenceInDays > 1 ? 's' : ''} ago';
-    }
+String timeSincePosted;
+if (differenceInYears > 0) {
+  timeSincePosted =
+      '$differenceInYears year${differenceInYears > 1 ? 's' : ''} ago';
+} else if (differenceInMonths > 0) {
+  timeSincePosted =
+      '$differenceInMonths month${differenceInMonths > 1 ? 's' : ''} ago';
+} else if (differenceInDays > 0) {
+  timeSincePosted =
+      '$differenceInDays day${differenceInDays > 1 ? 's' : ''} ago';
+} else {
+  final differenceInHours = difference.inHours;
+  final differenceInMinutes = difference.inMinutes % 60;
+  if (differenceInHours > 0) {
+    timeSincePosted =
+        '$differenceInHours hour${differenceInHours > 1 ? 's' : ''} ago';
+  } else if (differenceInMinutes > 0) {
+    timeSincePosted =
+        '$differenceInMinutes minute${differenceInMinutes > 1 ? 's' : ''} ago';
+  } else {
+    timeSincePosted = 'Just now';
+  }
+}
+
 
     return GestureDetector(
       onTap: () {

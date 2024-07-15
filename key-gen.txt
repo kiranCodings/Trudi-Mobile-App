@@ -1,0 +1,126 @@
+
+
+C:\Users\user>keytool -genkey -v -keystore  %userprofile%\trudi.jks ^
+More?     -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 ^
+More?     -alias trudi
+Enter keystore password:
+Re-enter new password:
+What is your first and last name?
+  [Unknown]:  Jagadesh Santharaj
+What is the name of your organizational unit?
+  [Unknown]:  Application Release
+What is the name of your organization?
+  [Unknown]:  Smashwing Technologies Private Limited
+What is the name of your City or Locality?
+  [Unknown]:  Chennai
+What is the name of your State or Province?
+  [Unknown]:  Tamil Nadu
+What is the two-letter country code for this unit?
+  [Unknown]:  IN
+Is CN=Jagadesh Santharaj, OU=Application Release, O=Smashwing Technologies Private Limited, L=Chennai, ST=Tamil Nadu, C=IN correct?
+  [no]:  yes
+
+Generating 2,048 bit RSA key pair and self-signed certificate (SHA256withRSA) with a validity of 10,000 days
+        for: CN=Jagadesh Santharaj, OU=Application Release, O=Smashwing Technologies Private Limited, L=Chennai, ST=Tamil Nadu, C=IN
+Enter key password for <trudi>
+        (RETURN if same as keystore password):
+Re-enter new password:
+[Storing C:\Users\user\trudi.jks]
+
+Warning:
+The JKS keystore uses a proprietary format. It is recommended to migrate to PKCS12 which is an industry standard format using "keytool -importkeystore -srckeystore C:\Users\user\trudi.jks -destkeystore C:\Users\user\trudi.jks -deststoretype pkcs12".
+
+C:\Users\user>keytool -list -v -keystore trudi.jks -storetype pkcs12
+Enter keystore password:
+Keystore type: PKCS12
+Keystore provider: SUN
+
+Your keystore contains 1 entry
+
+Alias name: trudi
+Creation date: Jul 13, 2024
+Entry type: PrivateKeyEntry
+Certificate chain length: 1
+Certificate[1]:
+Owner: CN=Jagadesh Santharaj, OU=Application Release, O=Smashwing Technologies Private Limited, L=Chennai, ST=Tamil Nadu, C=IN
+Issuer: CN=Jagadesh Santharaj, OU=Application Release, O=Smashwing Technologies Private Limited, L=Chennai, ST=Tamil Nadu, C=IN
+Serial number: 4563bf34a796ecf9
+Valid from: Sat Jul 13 15:12:13 IST 2024 until: Wed Nov 29 15:12:13 IST 2051
+Certificate fingerprints:
+         SHA1: 2C:36:4C:77:4A:9B:8D:3C:EE:FD:2E:21:04:AD:DC:9E:1F:94:A5:90
+         SHA256: D5:83:F8:D7:42:67:29:75:78:29:DA:61:F7:3E:CC:34:61:D5:48:1A:78:2B:2B:1F:F7:30:B7:05:98:30:5A:23
+Signature algorithm name: SHA256withRSA
+Subject Public Key Algorithm: 2048-bit RSA key
+Version: 3
+
+Extensions:
+
+#1: ObjectId: 2.5.29.14 Criticality=false
+SubjectKeyIdentifier [
+KeyIdentifier [
+0000: 6A 93 F7 B6 C0 83 2A B1   DE 37 19 A1 6B B9 86 14  j.....*..7..k...
+0010: 25 BA B0 7F                                        %...
+]
+]
+
+
+
+*******************************************
+*******************************************
+
+
+
+Warning:
+The JKS keystore uses a proprietary format. It is recommended to migrate to PKCS12 which is an industry standard format using "keytool -importkeystore -srckeystore trudi.jks -destkeystore trudi.jks -deststoretype pkcs12".
+
+
+C:\Users\user>keytool -list -v -keystore trudi.jks -storetype pkcs12
+Enter keystore password:
+Keystore type: PKCS12
+Keystore provider: SUN
+
+Your keystore contains 1 entry
+
+Alias name: trudi
+Creation date: Jul 13, 2024
+Entry type: PrivateKeyEntry
+Certificate chain length: 1
+Certificate[1]:
+Owner: CN=Jagadesh Santharaj, OU=Application Release, O=Smashwing Technologies Private Limited, L=Chennai, ST=Tamil Nadu, C=IN
+Issuer: CN=Jagadesh Santharaj, OU=Application Release, O=Smashwing Technologies Private Limited, L=Chennai, ST=Tamil Nadu, C=IN
+Serial number: 4563bf34a796ecf9
+Valid from: Sat Jul 13 15:12:13 IST 2024 until: Wed Nov 29 15:12:13 IST 2051
+Certificate fingerprints:
+         SHA1: 2C:36:4C:77:4A:9B:8D:3C:EE:FD:2E:21:04:AD:DC:9E:1F:94:A5:90
+         SHA256: D5:83:F8:D7:42:67:29:75:78:29:DA:61:F7:3E:CC:34:61:D5:48:1A:78:2B:2B:1F:F7:30:B7:05:98:30:5A:23
+Signature algorithm name: SHA256withRSA
+Subject Public Key Algorithm: 2048-bit RSA key
+Version: 3
+
+Extensions:
+
+#1: ObjectId: 2.5.29.14 Criticality=false
+SubjectKeyIdentifier [
+KeyIdentifier [
+0000: 6A 93 F7 B6 C0 83 2A B1   DE 37 19 A1 6B B9 86 14  j.....*..7..k...
+0010: 25 BA B0 7F                                        %...
+]
+]
+
+
+
+*******************************************
+*******************************************
+
+
+
+Warning:
+The JKS keystore uses a proprietary format. It is recommended to migrate to PKCS12 which is an industry standard format using "keytool -importkeystore -srckeystore trudi.jks -destkeystore trudi.jks -deststoretype pkcs12".
+
+C:\Users\user>keytool -importkeystore -srckeystore trudi.jks -destkeystore trudi.jks -deststoretype pkcs12
+Enter source keystore password:
+Entry for alias trudi successfully imported.
+Import command completed:  1 entries successfully imported, 0 entries failed or cancelled
+
+Warning:
+Migrated "trudi.jks" to PKCS12. The JKS keystore is backed up as "trudi.jks.old".

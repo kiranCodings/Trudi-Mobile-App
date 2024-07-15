@@ -29,14 +29,14 @@ class _AppliedJobSearchScreenState extends State<AppliedJobSearchScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Applied Jobs'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.filter_list),
-            onPressed: () {
-              // Implement filter functionality
-            },
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: Icon(Icons.filter_list),
+        //     onPressed: () {
+        //       // Implement filter functionality
+        //     },
+        //   ),
+        // ],
       ),
       body: Column(
         children: [

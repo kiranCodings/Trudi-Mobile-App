@@ -56,7 +56,7 @@ class _PdfViewerState extends State<PdfViewer> {
               icon: Icon(
                 Icons.download_sharp,
                 size: 25.0,
-                color: Colors.white,
+                color: const Color.fromARGB(255, 147, 147, 147),
               ),
               onPressed: () async {
                 final permitted = await checkPermission();
@@ -75,14 +75,14 @@ class _PdfViewerState extends State<PdfViewer> {
     );
   }
 
-  Future<void> downloadFile() async {
-    final downloadDirectory = await getExternalStorageDirectory();
+   Future<void> downloadFile() async {
+    final downloadDirectory = Directory('/storage/emulated/0/Download');
     final fileName = widget.isCertificate
         ? 'Certificate_${DateTime.now().millisecondsSinceEpoch}.pdf'
         : widget.isInvoice
             ? 'Invoice_${DateTime.now().millisecondsSinceEpoch}.pdf'
             : 'Previous_Paper_${DateTime.now().millisecondsSinceEpoch}.pdf';
-    final filePath = '${downloadDirectory?.path}/$fileName';
+    final filePath = '${downloadDirectory.path}/$fileName';
 
     try {
       await File(widget.filePath.toString()).copy(filePath);
@@ -101,7 +101,7 @@ class _PdfViewerState extends State<PdfViewer> {
       );
     }
   }
-
+  
   Future<bool> checkPermission() async {
     if (platform == TargetPlatform.android) {
       DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();

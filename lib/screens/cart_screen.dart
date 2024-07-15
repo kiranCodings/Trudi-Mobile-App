@@ -34,7 +34,8 @@ class _CartScreenState extends State<CartScreen> {
   bool isCouponApplied = false;
   var totalAmount, discountedAmount;
   bool _visible = false;
-
+  double _cgstRate = 0.0;
+  double _sgstRate = 0.0;
   @override
   void initState() {
     super.initState();
@@ -45,6 +46,14 @@ class _CartScreenState extends State<CartScreen> {
       setState(() {
         _visible = true;
       });
+    });
+    fetchGstDetails().then((gstDetails) {
+      setState(() {
+        _cgstRate = double.parse(gstDetails['cgst_rate']);
+        _sgstRate = double.parse(gstDetails['sgst_rate']);
+      });
+    }).catchError((error) {
+      print('Error fetching GST details: $error');
     });
   }
 
@@ -65,6 +74,26 @@ class _CartScreenState extends State<CartScreen> {
   //     return dis > int.tryParse(maxUsage) ? int.tryParse(maxUsage) : dis;
   //   }
   // }
+  Future<Map<String, dynamic>> fetchGstDetails() async {
+    final response = await http.get(
+        Uri.parse('http://192.168.31.228/eclass/public/api/getgstdetails'));
+    print(response.body);
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to fetch GST details');
+    }
+  }
+
+  // Calculate CGST amount
+  double calculateCGST(double totalAmount) {
+    return (totalAmount * _cgstRate) / 100;
+  }
+
+  // Calculate SGST amount
+  double calculateSGST(double totalAmount) {
+    return (totalAmount * _sgstRate) / 100;
+  }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -232,7 +261,8 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   Widget calculationSection(int cartTotal) {
-    String? currency = Provider.of<HomeDataProvider>(context).homeModel!.currency!.currency;
+    String? currency =
+        Provider.of<HomeDataProvider>(context).homeModel!.currency!.currency;
     return Container(
       height: 100,
       margin: EdgeInsets.only(left: 15.0, right: 15.0),
@@ -283,130 +313,180 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  Widget totalPay(BuildContext context) {
-    var cart = Provider.of<CartProvider>(context);
-    String? currency =
-        Provider.of<HomeDataProvider>(context).homeModel!.currency!.currency;
-    return SingleChildScrollView(
-      child: Container(
-        height: couponDis > 0 ? 250 : 150,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-                color: Color(0x1c2464).withOpacity(0.30),
-                blurRadius: 15.0,
-                offset: Offset(0.0, -20.5),
-                spreadRadius: -15.0)
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            couponSection(),
-            if (couponDis > 0)
-              calculationSection(cart.cartTotal)
-            else
-              SizedBox.shrink(),
-            Container(
-              padding: EdgeInsets.only(left: 15, right: 5),
-              margin: EdgeInsets.all(12.0),
-              height: 50.0,
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                    Color(0xFF2f73ba), 
-                                        Color(0xFF21b789), 
+Widget totalPay(BuildContext context) {
+  var cart = Provider.of<CartProvider>(context);
+  double totalAmount = (cart.cartTotal - couponDis).toDouble();
+  double cgstAmount = calculateCGST(totalAmount);
+  double sgstAmount = calculateSGST(totalAmount);
+  double finalAmount = totalAmount + cgstAmount + sgstAmount;
+  
+  String? currency = Provider.of<HomeDataProvider>(context).homeModel!.currency!.currency;
 
-                      ]),
-                  borderRadius: BorderRadius.circular(15.0)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    translate("Total_") +
-                        "${currencySymbol(currency!)} " +
-                        (cart.cartTotal - couponDis).toString(),
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.w600),
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      await Provider.of<UserProfile>(context, listen: false)
-                          .fetchUserProfile();
-                      String? email =
-                          Provider.of<UserProfile>(context, listen: false)
-                              .profileInstance
-                              .email;
-                      if (!email!.contains('guest_')) {
-                        if (isCouponApplied == true) {
-                          var disCountedAmount = cart.cartTotal - couponDis;
-                          Navigator.push(
-                            context,
-                            PageTransition(
-                              type: PageTransitionType.rightToLeft,
-                              child: PaymentGateway(
-                                  cart.cartTotal, disCountedAmount),
-                            ),
-                          );
-                        } else {
-                          Navigator.push(
-                            context,
-                            PageTransition(
-                              type: PageTransitionType.rightToLeft,
-                              child: PaymentGateway(
-                                  cart.cartTotal, cart.cartTotal),
-                            ),
-                          );
-                        }
-                      } else {
+  return SingleChildScrollView(
+    child: Container(
+      height: couponDis > 0 ? 270 : 170,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+              color: Color(0x1c2464).withOpacity(0.30),
+              blurRadius: 15.0,
+              offset: Offset(0.0, -20.5),
+              spreadRadius: -15.0)
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Assuming you have a couponSection method
+          couponSection(),
+          if (couponDis > 0)
+            // Assuming you have a calculationSection method
+            calculationSection(cart.cartTotal)
+          else
+            SizedBox.shrink(),
+          Container(
+            padding: EdgeInsets.only(left: 15, right: 5),
+            margin: EdgeInsets.all(12.0),
+            height: 70.0, // Increased height to accommodate "Tax Details" text
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFF2f73ba),
+                      Color(0xFF21b789),
+                    ]),
+                borderRadius: BorderRadius.circular(15.0)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      translate("Total_") +
+                          "${currencySymbol(currency!)} " +
+                          finalAmount.toStringAsFixed(2),
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.w600),
+                    ),
+                    GestureDetector(
+                      onTap: () {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text('Information'),
-                              content: Text(
-                                  "Please create an account to buy courses."),
+                              title: Text('Tax Details'),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('CGST: ${currencySymbol(currency)} ${cgstAmount.toStringAsFixed(2)}'),
+                                  Text('SGST: ${currencySymbol(currency)} ${sgstAmount.toStringAsFixed(2)}'),
+                                  Text('Total: ${currencySymbol(currency)} ${finalAmount.toStringAsFixed(2)}'),
+                                ],
+                              ),
+                              actions: [
+                                TextButton(
+                                  child: Text('Close'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
                             );
                           },
                         );
-                        await Future.delayed(Duration(seconds: 3));
-                        bool result = await HttpService().logout();
-                        if (result) {
-                          Provider.of<Visible>(context, listen: false)
-                              .toggleVisible(false);
-                          Navigator.of(context).pushNamed('/SignIn');
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                translate("Logout_failed"),
-                              ),
-                            ),
-                          );
-                        }
-                      }
-                    },
-                    child: Text(
-                      translate("Proceed_To_Pay") + ">>",
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.w600),
+                      },
+                      child: Text(
+                        'Tax Details',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12.0,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
                     ),
-                  )
-                ],
-              ),
+                  ],
+                ),
+                TextButton(
+                  onPressed: () async {
+                    await Provider.of<UserProfile>(context, listen: false)
+                        .fetchUserProfile();
+                    String? email =
+                        Provider.of<UserProfile>(context, listen: false)
+                            .profileInstance
+                            .email;
+                    if (!email!.contains('guest_')) {
+                      if (isCouponApplied == true) {
+                        var disCountedAmount = finalAmount.toInt();
+                        Navigator.push(
+                          context,
+                          PageTransition(
+                            type: PageTransitionType.rightToLeft,
+                            child: PaymentGateway(
+                               finalAmount.toInt() , disCountedAmount),
+                          ),
+                        );
+                      } else {
+                        Navigator.push(
+                          context,
+                          PageTransition(
+                            type: PageTransitionType.rightToLeft,
+                            child: PaymentGateway(
+                                finalAmount.toInt(), finalAmount.toInt()),
+                          ),
+                        );
+                      }
+                    } else {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Information'),
+                            content: Text(
+                                "Please create an account to buy courses."),
+                          );
+                        },
+                      );
+                      await Future.delayed(Duration(seconds: 3));
+                      bool result = await HttpService().logout();
+                      if (result) {
+                        Provider.of<Visible>(context, listen: false)
+                            .toggleVisible(false);
+                        Navigator.of(context).pushNamed('/SignIn');
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              translate("Logout_failed"),
+                            ),
+                          ),
+                        );
+                      }
+                    }
+                  },
+                  child: Text(
+                    translate("Proceed_To_Pay") + ">>",
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
-
+    ),
+  );
+}
   int isLoadingDelItemId = -1;
   Widget cartItemTab(CartModel detail, BuildContext context, String currency) {
     CartApiCall crt = new CartApiCall();
+
     return Container(
       height: 125,
       decoration: BoxDecoration(
@@ -659,7 +739,9 @@ class _CartScreenState extends State<CartScreen> {
                   arguments: DataSend(
                       cartCourseList[i].userId,
                       false,
-                      useAsInt ? cartCourseList[i].id : cartCourseList[i].id as dynamic,
+                      useAsInt
+                          ? cartCourseList[i].id
+                          : cartCourseList[i].id as dynamic,
                       cartCourseList[i].categoryId,
                       cartCourseList[i].type));
             },
@@ -758,7 +840,8 @@ class _CartScreenState extends State<CartScreen> {
                                         element.id == cartCourseList[i].id);
 
                                     Fluttertoast.showToast(
-                                      msg: translate("Item_deleted_from_your_cart"),
+                                      msg: translate(
+                                          "Item_deleted_from_your_cart"),
                                       backgroundColor: Colors.red,
                                       textColor: Colors.white,
                                       toastLength: Toast.LENGTH_LONG,
@@ -920,7 +1003,8 @@ class _CartScreenState extends State<CartScreen> {
                               InkWell(
                                   onTap: () async {
                                     setState(() {
-                                      isLoadingDelItemId = cartBundleList[i].id!;
+                                      isLoadingDelItemId =
+                                          cartBundleList[i].id!;
                                     });
                                     bool val = await CartApiCall()
                                         .removeBundleFromCart(

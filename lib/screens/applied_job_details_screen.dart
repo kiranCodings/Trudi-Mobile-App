@@ -43,15 +43,28 @@ class _AppliedJobDetailsScreenState extends State<AppliedJobDetailsScreen> {
               ),
             ),
             SizedBox(height: 16),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.network(
-                widget.appliedJob.image,
-                width: double.infinity,
-                height: 200,
-                fit: BoxFit.cover,
-              ),
-            ),
+           ClipRRect(
+  borderRadius: BorderRadius.circular(12),
+  child: Image.network(
+    widget.appliedJob.image,
+    width: double.infinity,
+    height: 200,
+    fit: BoxFit.cover,
+    errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+      return Container(
+        width: double.infinity,
+        height: 200,
+        color: Colors.grey, // Fallback color
+        child: Icon(
+          Icons.broken_image,
+          color: Colors.white,
+          size: 50,
+        ),
+      );
+    },
+  ),
+)
+,
             SizedBox(height: 24),
             Padding(
               padding: EdgeInsets.only(left: 16),

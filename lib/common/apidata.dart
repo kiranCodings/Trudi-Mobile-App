@@ -1,7 +1,7 @@
 class APIData {
   // Replace with your domain link : http://example.com/public/
-    // static const String domainLink = "https://lms.demo.smashsoft.in/trudi/public/";
-  static const String domainLink = "http://192.168.31.228/eclass/public/";
+    static const String domainLink = "https://lms.demo.smashsoft.in/trudi/public/";
+  // static const String domainLink = "http://192.168.31.228/eclass/public/";
   static const String domainApiLink = domainLink + "api/";
 
   // API Links

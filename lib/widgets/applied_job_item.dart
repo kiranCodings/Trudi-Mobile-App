@@ -55,15 +55,28 @@ class AppliedJobListItem extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                appliedJob.image,
-                width: 60,
-                height: 60,
-                fit: BoxFit.cover,
-              ),
-            ),
+           ClipRRect(
+  borderRadius: BorderRadius.circular(8),
+  child: Image.network(
+    appliedJob.image,
+    width: 60,
+    height: 60,
+    fit: BoxFit.cover,
+    errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+      return Container(
+        width: 60,
+        height: 60,
+        color: Colors.grey, // Fallback color
+        child: Icon(
+          Icons.broken_image,
+          color: Colors.white,
+          size: 30,
+        ),
+      );
+    },
+  ),
+)
+,
             SizedBox(width: 16),
             Expanded(
               child: Column(

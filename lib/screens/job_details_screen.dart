@@ -1,6 +1,7 @@
 import 'package:eclass/widgets/apply_button.dart';
 import 'package:flutter/material.dart';
 import 'package:eclass/model/job.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class JobDetailsScreen extends StatefulWidget {
   final Job job;
@@ -94,10 +95,9 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                   SizedBox(height: 8),
                   Padding(
                     padding: EdgeInsets.only(left: 16),
-                    child: Text(
-                      _stripHtmlTags(widget.job
-                          .description), // Access job property from widget.job
-                      style: TextStyle(
+                    child: HtmlWidget(
+                      widget.job.description,
+                      textStyle: TextStyle(
                         fontSize: 16,
                         color: Colors.grey[800],
                       ),
